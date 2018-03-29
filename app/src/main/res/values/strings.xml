@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ISS_Pass</string>
+    <string name="Longitude">Lon</string>
+    <string name="lat">Lat</string>
+    <string name="alt">Alt</string>
+    <string name="mylocation">My Location</string>
+    <string name="submit">Submit</string>
+    <string name="pass">N</string>
+    <string name="duration">Duration</string>
+    <string name="passTime">Passes at</string>
+    <string name="request">http://api.open-notify.org/iss-pass.json?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="error_lat_value">Latitude must be less than 71</string>
+
+</resources>
