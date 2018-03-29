@@ -39,6 +39,15 @@ import java.util.concurrent.TimeUnit;
 import ISS_Data.ISSPassData;
 import ISS_Data.ISS_Pass;
 
+
+
+
+/*
+* On first launch, application will fetch current location and get the ISS Pass data and display,
+* If user wants to get details for custom location, use get prediction after entering the custom locations
+*
+* using my locationm user can go back to device location information
+ */
 public class MainActivity extends AppCompatActivity implements ISSPassFragment.OnListFragmentInteractionListener {
 
 

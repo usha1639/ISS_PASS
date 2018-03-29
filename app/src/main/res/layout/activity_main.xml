@@ -119,6 +119,7 @@
         android:layout_width="340dp"
         android:layout_height="48dp"
          android:textColor="@color/colorRed"
+        android:text="use get prediction for custom search, my location for device location search"
         android:textSize="10sp"
        />
 </LinearLayout>
