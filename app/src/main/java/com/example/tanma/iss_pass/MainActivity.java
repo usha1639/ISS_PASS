@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.PersistableBundle;
 import android.os.SystemClock;
@@ -23,6 +24,8 @@ import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -46,9 +49,17 @@ import ISS_Data.ISS_Pass;
 * On first launch, application will fetch current location and get the ISS Pass data and display,
 * If user wants to get details for custom location, use get prediction after entering the custom locations
 *
-* using my locationm user can go back to device location information
+* using my location user can go back to device location information
+*
+* Delay due to docking re-boost, and debris avoidance :
+* Data in the list view is refreshed  from 2 ends,
+* 1. Location updator updates when device changes  distance of ~ 2miles, or in every 5mins
+*
+* 2. schedule the alram for half way(time) from next ISS_Pass rise time,
+*   
+*
  */
-public class MainActivity extends AppCompatActivity implements ISSPassFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ISSPassFragment.OnListFragmentInteractionListener , RecyclerFragment.OnFragmentInteractionListener{
 
 
 
@@ -134,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements ISSPassFragment.O
      */
     protected void getPrediction(View view)
     {
+        hideSoftKeyboard(view);
+
         Log.d(TAG, "getPrediction: Entered"+mETaltitude.getText().toString());
         mErrorInfo.setText("");
        // String url = "http://api.open-notify.org/iss-pass.json?lat="+Float.valueOf(mETlatitude.getText().toString())+"&lon="+Float.valueOf(mETlongtude.getText().toString())+"&alt="+Float.valueOf(mETaltitude.getText().toString())+"&n="+Float.valueOf(n.getText().toString());
@@ -177,7 +190,9 @@ public class MainActivity extends AppCompatActivity implements ISSPassFragment.O
      */
     public void getMyLocation(View view)
     {
+        hideSoftKeyboard(view);
         mErrorInfo.setText("");
+        ISS_Pass.setN(Integer.valueOf(mPass.getText().toString()));
         mETlongtude.setText(String.valueOf(ISS_Pass.getMlatestCurrentLocation().getLongitude()));
         mETlatitude.setText(String.valueOf(ISS_Pass.getMlatestCurrentLocation().getLatitude()));
         mETaltitude.setText(String.valueOf(ISS_Pass.getMlatestCurrentLocation().getAltitude()));
@@ -187,6 +202,13 @@ public class MainActivity extends AppCompatActivity implements ISSPassFragment.O
 
     }
 
+    private void hideSoftKeyboard(View view)
+    {
+        InputMethodManager inputManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputManager != null) {
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
     private void requestPermission()
     {
        ActivityCompat.requestPermissions(this, new String[]
@@ -198,7 +220,10 @@ public class MainActivity extends AppCompatActivity implements ISSPassFragment.O
     @Override
     protected void onResume() {
         super.onResume();
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mlocationUpdater = new LocationUpdater(this);
+
 
         IntentFilter issPassUpdate = new IntentFilter(CONSTANTS.ACTION_DATA_UPDATE);
         issPassUpdate.addCategory(Intent.CATEGORY_DEFAULT);
@@ -215,6 +240,10 @@ public class MainActivity extends AppCompatActivity implements ISSPassFragment.O
 
     }
 
+    private void hideSoftKeybord()
+    {
+
+    }
     @Override
     protected void onStop() {
         super.onStop();
@@ -229,6 +258,11 @@ public class MainActivity extends AppCompatActivity implements ISSPassFragment.O
         Log.d(TAG, "onListFragmentInteraction: Entered");
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        Log.d(TAG, "onFragmentInteraction: Entered");
+    }
+
 
     public class ISS_PassListner extends BroadcastReceiver {
         public ISS_PassListner()
@@ -240,16 +274,14 @@ public class MainActivity extends AppCompatActivity implements ISSPassFragment.O
 
           if (intent.getAction()==CONSTANTS.ACTION_DATA_UPDATE){
                 Log.d(TAG, "onReceive: data updated");
-              FragmentManager fm = getSupportFragmentManager();
+              mPass.setText(String.valueOf(missPassData.getmISSPassdata().size()));
 
+              FragmentManager fm = getSupportFragmentManager();
               FragmentTransaction ft = fm.beginTransaction();
 
-              if(mfragment==null) {
-                  mfragment = new ISSPassFragment();
-
-
-
-                  ft.add(R.id.fragmentContainer, mfragment).commit();
+                if(mfragment==null){
+                    mfragment = new RecyclerFragment();
+                    ft.add(R.id.fragmentContainer, mfragment).commit();
               }
               else
               {
@@ -265,10 +297,10 @@ public class MainActivity extends AppCompatActivity implements ISSPassFragment.O
           else if(intent.getAction()==CONSTANTS.ACTION_LOCATION_UPDATE)
           {
               Log.d(TAG, "onReceive: location update entered");
-              mETaltitude.setText(String.valueOf(ISS_Pass.getMlatestCurrentLocation().getLatitude()));
-              mETlatitude.setText(String.valueOf(ISS_Pass.getMlatestCurrentLocation().getAltitude()));
-              mETlongtude.setText(String.valueOf(ISS_Pass.getMlatestCurrentLocation().getLongitude()));
-              mPass.setText(String.valueOf(missPassData.getmISSPassdata().size()));
+              mETaltitude.setText(String.format("%.2f",ISS_Pass.getMlatestCurrentLocation().getLatitude()));
+              mETlatitude.setText(String.format("%.2f",ISS_Pass.getMlatestCurrentLocation().getAltitude()));
+              mETlongtude.setText(String.format("%.2f",ISS_Pass.getMlatestCurrentLocation().getLongitude()));
+
 
               Intent fetchIntent = new Intent(getApplicationContext(), ISS_Service.class);
               fetchIntent.setAction("com.example.tanma.iss_pass.action.GET");

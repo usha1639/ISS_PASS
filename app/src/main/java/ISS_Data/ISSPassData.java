@@ -16,6 +16,7 @@ public class ISSPassData {
 
     }
 
+
     synchronized public static ISSPassData getInstance()
     {
         if(instance==null)

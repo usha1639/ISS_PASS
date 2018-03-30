@@ -12,6 +12,8 @@ import ISS_Data.ISS_Pass;
 
 /**
  * Created by tanma on 3/27/2018.
+ *
+ *
  */
 
 public class PredictionScheduler extends BroadcastReceiver {

@@ -70,7 +70,10 @@ public class ISS_Service extends IntentService {
      */
     private void handleActionGetISSPass() {
            miss_response.setUrl(false,"");
-            miss_response.getIssPassData();
+            if(miss_response.getHttpClientFetch())
+            {
+                handleErrors("",miss_response.getError());
+            }
             Intent intent = new Intent();
             intent.setAction(CONSTANTS.ACTION_DATA_UPDATE);
             sendBroadcast(intent);

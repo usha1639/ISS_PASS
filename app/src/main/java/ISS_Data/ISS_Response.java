@@ -103,12 +103,12 @@ public class ISS_Response {
         String str;
         try {
             int n = 10;
-            str = "http://api.open-notify.org/iss-pass.json?lat=" + ISS_Pass.getMlatestCurrentLocation().getLatitude() + "&lon=" + ISS_Pass.getMlatestCurrentLocation().getLongitude() + "&alt=" + "&n=" + ISS_Pass.getN();
+         /*   str = "http://api.open-notify.org/iss-pass.json?lat=" + ISS_Pass.getMlatestCurrentLocation().getLatitude() + "&lon=" + ISS_Pass.getMlatestCurrentLocation().getLongitude() + "&alt=" + "&n=" + ISS_Pass.getN();
 
             if (ISS_Pass.getMlatestCurrentLocation().getAltitude() > 0)
                 str = "http://api.open-notify.org/iss-pass.json?lat=" + ISS_Pass.getMlatestCurrentLocation().getLatitude() + "&lon=" + ISS_Pass.getMlatestCurrentLocation().getLongitude() + "&alt=" + ISS_Pass.getMlatestCurrentLocation().getAltitude() + "&n=" + ISS_Pass.getN();
             // URL url = new URL("http://api.open-notify.org/iss-pass.json?lat=45.0&lon=-122.3&alt=&n=10");
-
+*/
 
             URL url = new URL(murl);
 
@@ -125,7 +125,6 @@ public class ISS_Response {
                 //handleErrors("failure",jresponse.getString("reason") );
                 return;
             }
-            Log.d("XXXXXX", "getIssPassData: " + response);
             JSONArray jresponsearray = jresponse.getJSONArray("response");
             JSONObject req = jresponse.getJSONObject("request");
 
@@ -139,7 +138,7 @@ public class ISS_Response {
 
             JSONObject obj = jresponsearray.getJSONObject(0);
 
-            if (issPassData.getmISSPassdata().size()>0 && issPassData.getmISSPassdata().get(0).getRisetime() == obj.getInt(CONSTANTS.risetime)) {
+            if (issPassData.getmISSPassdata().size()==length && issPassData.getmISSPassdata().get(0).getRisetime() == obj.getInt(CONSTANTS.risetime)) {
                 return;
             }
 
@@ -200,7 +199,7 @@ public class ISS_Response {
 
             JSONObject obj = jresponsearray.getJSONObject(0);
 
-            if (issPassData.getmISSPassdata().size() > 0 && issPassData.getmISSPassdata().get(0).getRisetime() == obj.getInt(CONSTANTS.risetime)) {
+            if (issPassData.getmISSPassdata().size()==length && issPassData.getmISSPassdata().get(0).getRisetime() == obj.getInt(CONSTANTS.risetime)) {
                 return false;
             }
 

@@ -23,6 +23,8 @@ import ISS_Data.ISS_Pass;
     change in distance  ~ 2 miles
 
 
+
+
      */
 public class LocationUpdater implements LocationListener {
     private static String TAG = LocationUpdater.class.getName();
@@ -72,6 +74,7 @@ public class LocationUpdater implements LocationListener {
         Log.d(TAG, "onLocationChanged: Entered Latitude :" + location.getLatitude() + " :: longitude : " + location.getLongitude());
             if(ISS_Pass.getMlatestCurrentLocation()!=location) {
                 ISS_Pass.setMlatestCurrentLocation(location);
+                ISS_Pass.setN(10);
                 Intent intent = new Intent();
                 intent.setAction(CONSTANTS.ACTION_LOCATION_UPDATE);
                 mcontext.sendBroadcast(intent);

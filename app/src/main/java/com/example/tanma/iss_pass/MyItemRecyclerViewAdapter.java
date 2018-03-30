@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import ISS_Data.ISSPassData;
 import ISS_Data.ISS_Pass;
 
 /**
@@ -26,6 +27,7 @@ import ISS_Data.ISS_Pass;
  * TODO: Replace the implementation with code for your data type.
  */
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
+    private static ISSPassData issPassData = ISSPassData.getInstance();
 
     private final List<ISS_Pass> mValues;
     private final OnListFragmentInteractionListener mListener;
@@ -58,7 +60,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         String minutes = String.format(String.format("%.2f",(((mValues.get(position).getDuration()) % 86400) % 3600) / 60)) ;
         holder.mTimeView.setText(localTime);
         holder.mDurationView.setText(minutes);
-        holder.itemView.setActivated(true);
+
 
 
     }
@@ -66,7 +68,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     @Override
     public int getItemCount() {
 
-        return mValues.size();
+        return  mValues.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
