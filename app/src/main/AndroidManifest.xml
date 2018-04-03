@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity android:name=".View.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,12 +23,12 @@
         </activity>
 
         <service
-            android:name=".ISS_Service"
+            android:name=".ISSPassDataController.ISS_Service"
             android:exported="true" >
 
         </service>
 
-        <receiver android:name=".PredictionScheduler"
+        <receiver android:name=".ISSPassDataController.PredictionListner"
             android:enabled="true"
             android:exported="true">
 
