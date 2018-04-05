@@ -75,11 +75,10 @@ public class ISS_Response {
         return sb.toString();
     }
 
-    /*
+    /************************************
      * parse the new data in success case,
      * communicate to error to ui in failure case
-     */
-
+     ************************************/
     public boolean getHttpClientFetch()
     {
         InputStream inputStream;
